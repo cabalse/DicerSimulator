@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
+import FadeLoader from "react-spinners/FadeLoader";
 
 import Group from "./components/group";
 import DataGroup from "./models/data-group";
@@ -8,9 +9,11 @@ import DataGroups from "./models/data-groups";
 function App() {
   const [dataGroups, setDataGroups] = useState<Array<DataGroups>>([]);
   const [displayModal, setDisplayModal] = useState<boolean>(false);
+  const [displayLoader, setDisplayLoader] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayLoader(false);
     if (e.target.files) {
       setFile(e.target.files[0]);
       console.log("File name: ", e.target.files[0].name);
@@ -85,6 +88,14 @@ function App() {
     setDataGroups(newDataGroups);
   };
 
+  const handleOpenFileSelectDialog = () => {
+    setDisplayModal(true);
+  };
+
+  const handleFileClick = () => {
+    setDisplayLoader(true);
+  };
+
   return (
     <>
       <div className="h-screen flex items-center justify-center">
@@ -94,13 +105,13 @@ function App() {
             <div className="flex flex-row">
               <button
                 className="bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline-gray active:bg-gray-800"
-                onClick={() => addNewDataGroups()}
+                onClick={addNewDataGroups}
               >
                 Add DataGroup
               </button>
               <button
                 className="ml-2 bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline-gray active:bg-gray-800"
-                onClick={() => setDisplayModal(true)}
+                onClick={handleOpenFileSelectDialog}
               >
                 Load DataGroups
               </button>
@@ -140,12 +151,17 @@ function App() {
               <h1 className="text-lg font-semibold mb-4">
                 Select and Download a File
               </h1>
-              <input type="file" className="mb-4" onChange={handleFileChange} />
+              <input
+                type="file"
+                className="mb-4"
+                onClick={handleFileClick}
+                onChange={handleFileChange}
+              />
               <button
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-green"
                 onClick={handleUpload}
               >
-                Download
+                Upload
               </button>
               <button
                 id="closeModal"
@@ -155,6 +171,13 @@ function App() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      ) : null}
+      {displayLoader ? (
+        <div className="fixed inset-0 bg-black bg-opacity-50">
+          <div className="h-screen flex items-center justify-center">
+            <FadeLoader color="#009900" />
           </div>
         </div>
       ) : null}
