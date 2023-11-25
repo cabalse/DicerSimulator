@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import InputField from "./input-field";
+import RemoveIcon from "./icons/remove-icon";
 
 type props = {
   groupId: number;
@@ -6,11 +8,19 @@ type props = {
   name: string;
   value: number;
   updateValue: (id: number, name: string, value: number) => void;
+  remove: (groupId: number, id: number) => void;
 };
 
-const GroupInput = ({ groupId, id, name, value, updateValue }: props) => {
-  const [nameVal, setNameVal] = useState(name);
-  const [valueVal, setValueVal] = useState(value);
+const GroupInput = ({
+  groupId,
+  id,
+  name,
+  value,
+  updateValue,
+  remove,
+}: props) => {
+  const [nameVal, setNameVal] = useState<string>(name);
+  const [valueVal, setValueVal] = useState<number>(value);
 
   useEffect(() => {
     setNameVal(name);
@@ -21,22 +31,26 @@ const GroupInput = ({ groupId, id, name, value, updateValue }: props) => {
     updateValue(id, nameVal, valueVal);
   }, [nameVal, valueVal]);
 
+  const onNameChange = (value: string) => setNameVal(value);
+  const onValueChange = (value: string) => setValueVal(parseInt(value));
+
   return (
-    <div>
-      <input
+    <div className="flex flex-row min-w-[500px]">
+      <InputField
         id={groupId + "name" + id}
-        type="text"
-        className="border-b focus:outline-none focus:border-blue-500 transition duration-300 border-gray-300 px-2 py-1 mr-4"
         value={nameVal}
-        onChange={(e) => setNameVal(e.target.value)}
+        onChange={onNameChange}
+        className="w-[250px]"
       />
-      <input
+      <InputField
         id={groupId + "value" + id}
-        type="text"
-        className="w-8 border-b focus:outline-none focus:border-blue-500 transition duration-300 border-gray-300 px-2 py-1"
         value={valueVal}
-        onChange={(e) => setValueVal(Number(e.target.value))}
+        onChange={onValueChange}
+        className="w-[30px]"
       />
+      <div className="pt-1" onClick={() => remove(groupId, id)}>
+        <RemoveIcon />
+      </div>
     </div>
   );
 };

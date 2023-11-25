@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import fileDownload from "js-file-download";
 import FadeLoader from "react-spinners/FadeLoader";
 
 import Group from "./components/group";
-import DataGroup from "./models/data-group";
 import DataGroups from "./models/data-groups";
+import CenterOnScreen from "./components/center-on-screen";
+import MainControls from "./components/main-controls";
+import Layout from "./components/layout";
+import Modal from "./components/modal";
 
 function App() {
   const [dataGroups, setDataGroups] = useState<Array<DataGroups>>([]);
-  const [displayModal, setDisplayModal] = useState<boolean>(false);
+  const [displayFileSelectModal, setDisplayFileSelectModal] =
+    useState<boolean>(false);
   const [displayLoader, setDisplayLoader] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
 
@@ -35,7 +39,7 @@ function App() {
       };
       reader.readAsText(file);
     }
-    setDisplayModal(false);
+    setDisplayFileSelectModal(false);
   };
 
   const addNewDataGroups = () => {
@@ -89,96 +93,110 @@ function App() {
   };
 
   const handleOpenFileSelectDialog = () => {
-    setDisplayModal(true);
+    setDisplayFileSelectModal(true);
   };
 
   const handleFileClick = () => {
     setDisplayLoader(true);
   };
 
+  const updateMetaValues = (groupId: number, title: string, desc: string) => {
+    const newDataGroups = [...dataGroups];
+    newDataGroups.forEach(function (part, index, arr) {
+      if (part.id === groupId) {
+        part.name = title;
+        part.desc = desc;
+      }
+    });
+    setDataGroups(newDataGroups);
+  };
+
+  const removeValue = (groupId: number, id: number) => {
+    const newDataGroups = [...dataGroups];
+    newDataGroups.forEach(function (part, index, arr) {
+      if (part.id === groupId) {
+        part.dataGroup.forEach(function (innerPart, innerIndex, innerArr) {
+          if (innerPart.id === id) {
+            part.dataGroup.splice(index, 1);
+          }
+        });
+      }
+    });
+    setDataGroups(newDataGroups);
+  };
+
+  const title = "Dicer Simulator";
+
+  const menu = (
+    <MainControls
+      {...{
+        addNewDataGroups,
+        saveDataGroupToFile,
+        handleOpenFileSelectDialog,
+      }}
+    />
+  );
+
+  const inputControls = (
+    <>
+      {dataGroups.length > 0 ? (
+        <div className="flex flex-wrap">
+          {dataGroups.map((item) => (
+            <Group
+              groupId={item.id}
+              title={item.name}
+              desc={item.desc}
+              data={item.dataGroup}
+              updateValue={updateValue}
+              addNewValue={() => addNewDataGroup(item.id)}
+              removeValue={removeValue}
+              updateMetaValues={updateMetaValues}
+              key={item.id}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="border border-gray-300 rounded-md p-4 m-2">
+          <div className="italic">Add or Load DataGroup(s)</div>
+        </div>
+      )}
+    </>
+  );
+
+  const fileSelectModal = (
+    <>
+      <h1 className="text-lg font-semibold mb-4">Select and Download a File</h1>
+      <input
+        type="file"
+        className="mb-4"
+        onClick={handleFileClick}
+        onChange={handleFileChange}
+      />
+      <button
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-green"
+        onClick={handleUpload}
+      >
+        Upload
+      </button>
+      <button
+        id="closeModal"
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-gray ml-2"
+        onClick={() => setDisplayFileSelectModal(false)}
+      >
+        Close
+      </button>
+    </>
+  );
+
   return (
     <>
-      <div className="h-screen flex items-center justify-center">
-        <div className="flex flex-col">
-          <div className="p-2">
-            <div className="text-xl font-semibold">Dice Simulator</div>
-            <div className="flex flex-row">
-              <button
-                className="bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline-gray active:bg-gray-800"
-                onClick={addNewDataGroups}
-              >
-                Add DataGroup
-              </button>
-              <button
-                className="ml-2 bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline-gray active:bg-gray-800"
-                onClick={handleOpenFileSelectDialog}
-              >
-                Load DataGroups
-              </button>
-              <button
-                className="ml-2 bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline-gray active:bg-gray-800"
-                onClick={saveDataGroupToFile}
-              >
-                Save DataGroups
-              </button>
-            </div>
-          </div>
-          {dataGroups.length > 0 ? (
-            <div className="flex">
-              {dataGroups.map((item) => (
-                <Group
-                  groupId={item.id}
-                  title={item.name}
-                  desc={item.desc}
-                  data={item.dataGroup}
-                  updateValue={updateValue}
-                  addNewValue={() => addNewDataGroup(item.id)}
-                  key={item.id}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="w-72 border border-gray-300 rounded-md p-4 m-2">
-              <div className="italic">Add or Load DataGroup(s)</div>
-            </div>
-          )}
-        </div>
-      </div>
-      {displayModal ? (
-        <div className="fixed inset-0 bg-black bg-opacity-50">
-          <div className="h-screen flex items-center justify-center">
-            <div className="w-72 border border-gray-300 rounded-md bg-white p-4 m-2">
-              <h1 className="text-lg font-semibold mb-4">
-                Select and Download a File
-              </h1>
-              <input
-                type="file"
-                className="mb-4"
-                onClick={handleFileClick}
-                onChange={handleFileChange}
-              />
-              <button
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-green"
-                onClick={handleUpload}
-              >
-                Upload
-              </button>
-              <button
-                id="closeModal"
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-gray ml-2"
-                onClick={() => setDisplayModal(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <Layout {...{ title, menu, inputControls }} />
+      <Modal display={displayFileSelectModal}>{fileSelectModal}</Modal>
       {displayLoader ? (
         <div className="fixed inset-0 bg-black bg-opacity-50">
-          <div className="h-screen flex items-center justify-center">
+          <CenterOnScreen>
             <FadeLoader color="#009900" />
-          </div>
+          </CenterOnScreen>
         </div>
       ) : null}
     </>
