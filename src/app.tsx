@@ -48,6 +48,7 @@ function App() {
       id: dataGroups.length + 1,
       name: "",
       desc: "",
+      type: "dice",
       dataGroup: [{ id: 0, name: "", value: 0 }],
     });
     setDataGroups(newDataGroups);
@@ -100,29 +101,84 @@ function App() {
     setDisplayLoader(true);
   };
 
-  const updateMetaValues = (groupId: number, title: string, desc: string) => {
+  const updateMetaValues = (
+    groupId: number,
+    title: string,
+    desc: string,
+    type: string
+  ) => {
     const newDataGroups = [...dataGroups];
     newDataGroups.forEach(function (part, index, arr) {
       if (part.id === groupId) {
         part.name = title;
         part.desc = desc;
+        part.type = type;
       }
     });
     setDataGroups(newDataGroups);
+  };
+
+  const removeElementFromArray = (arr: Array<any>, index: number) => {
+    if (index > -1) {
+      arr.splice(index, 1);
+    }
+    return arr;
   };
 
   const removeValue = (groupId: number, id: number) => {
     const newDataGroups = [...dataGroups];
     newDataGroups.forEach(function (part, index, arr) {
       if (part.id === groupId) {
-        part.dataGroup.forEach(function (innerPart, innerIndex, innerArr) {
-          if (innerPart.id === id) {
-            part.dataGroup.splice(index, 1);
+        part.dataGroup.forEach(function (part, index, arr) {
+          if (part.id === id) {
+            arr = removeElementFromArray(arr, index);
           }
         });
       }
     });
+    setDataGroups(reIndexAllIds(newDataGroups));
+  };
+
+  const reIndexAllIds = (array: DataGroups[]): DataGroups[] => {
+    const newArray = [...array];
+    newArray.forEach(function (part, index, arr) {
+      part.id = index + 1;
+      part.dataGroup.forEach(function (part, index, arr) {
+        part.id = index + 1;
+      });
+    });
+    return newArray;
+  };
+
+  const moveGroup = (groupId: number, direction: "up" | "down") => {
+    const newDataGroups = [...dataGroups];
+    const index = newDataGroups.findIndex((item) => item.id === groupId);
+    if (direction === "down") {
+      if (index > 0) {
+        const temp = newDataGroups[index - 1];
+        newDataGroups[index - 1] = newDataGroups[index];
+        newDataGroups[index] = temp;
+      }
+    } else {
+      if (index < newDataGroups.length - 1) {
+        const temp = newDataGroups[index + 1];
+        newDataGroups[index + 1] = newDataGroups[index];
+        newDataGroups[index] = temp;
+      }
+    }
     setDataGroups(newDataGroups);
+  };
+
+  const givePosition = (groupId: number) => {
+    const index = dataGroups.findIndex((item) => item.id === groupId);
+    const length = dataGroups.length;
+    if (index === 0) {
+      return "first";
+    } else if (index === length - 1) {
+      return "last";
+    } else {
+      return "middle";
+    }
   };
 
   const title = "Dicer Simulator";
@@ -140,18 +196,21 @@ function App() {
   const inputControls = (
     <>
       {dataGroups.length > 0 ? (
-        <div className="flex flex-wrap">
+        <div className="flex flex-row flex-wrap">
           {dataGroups.map((item) => (
             <Group
               groupId={item.id}
               title={item.name}
               desc={item.desc}
+              type={item.type}
               data={item.dataGroup}
               updateValue={updateValue}
               addNewValue={() => addNewDataGroup(item.id)}
               removeValue={removeValue}
               updateMetaValues={updateMetaValues}
               key={item.id}
+              position={givePosition}
+              moveGroup={moveGroup}
             />
           ))}
         </div>
@@ -188,7 +247,7 @@ function App() {
     </>
   );
 
-  return (
+  const appContent = (
     <>
       <Layout {...{ title, menu, inputControls }} />
       <Modal display={displayFileSelectModal}>{fileSelectModal}</Modal>
@@ -201,6 +260,8 @@ function App() {
       ) : null}
     </>
   );
+
+  return appContent;
 }
 
 export default App;
