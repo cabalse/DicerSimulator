@@ -30,6 +30,7 @@ type props = {
   ) => void;
   position: (groupId: number) => "first" | "last" | "middle";
   moveGroup: (groupId: number, direction: "up" | "down") => void;
+  removeGroup: (groupId: number) => void;
 };
 
 const Group = ({
@@ -44,6 +45,7 @@ const Group = ({
   updateMetaValues,
   position,
   moveGroup,
+  removeGroup,
 }: props) => {
   const [displayMetaEditModal, setDisplayMetaEditModal] = useState(false);
 
@@ -63,6 +65,11 @@ const Group = ({
 
   const onMoveUp = () => moveGroup(groupId, "up");
 
+  const onRemoveGroup = () => {
+    removeGroup(groupId);
+    setDisplayMetaEditModal(false);
+  };
+
   const metaEditModal = (
     <div className="flex flex-col">
       <InputField
@@ -72,17 +79,23 @@ const Group = ({
         onChange={onChangeTitle}
         className="w-[300px]"
       />
-      <InputField
-        id="MetaInputFieldDesc"
-        title="Description"
-        value={desc}
-        onChange={onChangeDesc}
-        className="w-[400px]"
-      />
-      <select onChange={onChangeType}>
-        <option>Dice</option>
-        <option>Modifiers</option>
+      <div className="mt-2">
+        <InputField
+          id="MetaInputFieldDesc"
+          title="Description"
+          value={desc}
+          onChange={onChangeDesc}
+          className="w-[400px]"
+        />
+      </div>
+      <select className="border mt-2" onChange={onChangeType}>
+        <option selected={type === "Dice"}>Dice</option>
+        <option selected={type === "Modifiers"}>Modifiers</option>
+        <option selected={type === "Targets"}>Targets</option>
       </select>
+      <button className="text-left text-red-500 mt-2" onClick={onRemoveGroup}>
+        Remove Group
+      </button>
       <div className="flex flex-row justify-end mt-2">
         <button onClick={() => setDisplayMetaEditModal(false)}>Done</button>
       </div>

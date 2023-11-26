@@ -8,6 +8,9 @@ import CenterOnScreen from "./components/center-on-screen";
 import MainControls from "./components/main-controls";
 import Layout from "./components/layout";
 import Modal from "./components/modal";
+import SimulationResult from "./components/simulation-result";
+
+const title = "Dicer Simulator";
 
 function App() {
   const [dataGroups, setDataGroups] = useState<Array<DataGroups>>([]);
@@ -169,6 +172,15 @@ function App() {
     setDataGroups(newDataGroups);
   };
 
+  const removeGroup = (groupId: number) => {
+    const newDataGroups = [...dataGroups];
+    const index = newDataGroups.findIndex((item) => item.id === groupId);
+    if (index > -1) {
+      newDataGroups.splice(index, 1);
+    }
+    setDataGroups(reIndexAllIds(newDataGroups));
+  };
+
   const givePosition = (groupId: number) => {
     const index = dataGroups.findIndex((item) => item.id === groupId);
     const length = dataGroups.length;
@@ -180,8 +192,6 @@ function App() {
       return "middle";
     }
   };
-
-  const title = "Dicer Simulator";
 
   const menu = (
     <MainControls
@@ -211,6 +221,7 @@ function App() {
               key={item.id}
               position={givePosition}
               moveGroup={moveGroup}
+              removeGroup={removeGroup}
             />
           ))}
         </div>
@@ -249,7 +260,10 @@ function App() {
 
   const appContent = (
     <>
-      <Layout {...{ title, menu, inputControls }} />
+      <Layout
+        {...{ title, menu, inputControls }}
+        result={<SimulationResult dataGroups={dataGroups} />}
+      />
       <Modal display={displayFileSelectModal}>{fileSelectModal}</Modal>
       {displayLoader ? (
         <div className="fixed inset-0 bg-black bg-opacity-50">

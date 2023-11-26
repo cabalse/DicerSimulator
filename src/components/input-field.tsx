@@ -15,7 +15,7 @@ const InputField = ({ id, title, value, onChange, className = "" }: props) => {
 
   return (
     <div className="flex flex-row">
-      {title ? <div className="mr-4">{title}</div> : null}
+      {title ? <div className="mt-1 mr-4">{title}</div> : null}
       <input
         id={id}
         type="text"
