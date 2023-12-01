@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createElement } from "react";
 import _ from "lodash";
 
 import DataGroups from "../models/data-groups";
-import InputField from "./input-field";
-import Button from "./button";
+import InputField from "./atoms/input-field";
+import Button from "./atoms/button";
 import SimulationResultRow from "./simulation-result-row";
+import Simulation from "../models/simulation";
+import { TARGETS } from "../consts/ttypes";
+import ResultTarget from "../models/result-target";
+import SimulationGroup from "../models/simulation-group";
 
-type props = {
+type Props = {
   dataGroups: Array<DataGroups>;
 };
 
@@ -26,13 +30,18 @@ const SimulationResult = ({ dataGroups }) => {
   const createSimulationPath = (dataGroups: Array<DataGroups>) => {
     let result = "";
     let numberOfCombinations = 1;
+
     dataGroups.forEach(function (part, index, arr) {
-      result += part.name != "" ? part.name : "NaN";
-      result += " [" + part.dataGroup.length + "]";
-      if (index !== arr.length - 1) result += " -> ";
-      numberOfCombinations *= part.dataGroup.length;
+      if (part.ttype !== TARGETS) {
+        result += part.name != "" ? part.name : "NaN";
+        result += " [" + part.dataGroup.length + "]";
+        if (index !== arr.length - 1) result += " -> ";
+        numberOfCombinations *= part.dataGroup.length;
+      }
     });
+
     result += " => " + numberOfCombinations;
+
     setSimulationPath(result);
   };
 
@@ -40,18 +49,14 @@ const SimulationResult = ({ dataGroups }) => {
     return new Promise((resolve) => setTimeout(resolve, 500));
   };
 
-  const switchSimulationGroups = (
-    simulationGroups: Array<{ current: number; max: number }>
-  ) => {
+  const switchSimulationGroups = (simulationGroups: Array<SimulationGroup>) => {
     const copySimGroups = _.cloneDeep(simulationGroups);
     let keepSwitching;
     let currSimGroup = copySimGroups.length - 1;
 
     do {
       keepSwitching = false;
-
       copySimGroups[currSimGroup].current++;
-
       if (
         copySimGroups[currSimGroup].current === copySimGroups[currSimGroup].max
       ) {
@@ -64,9 +69,7 @@ const SimulationResult = ({ dataGroups }) => {
     return copySimGroups;
   };
 
-  const keepRunningSimulation = (
-    simulationGroups: Array<{ current: number; max: number }>
-  ) => {
+  const keepRunningSimulation = (simulationGroups: Array<SimulationGroup>) => {
     let keepRunning = false;
     simulationGroups.forEach((simGroup) => {
       if (simGroup.current != simGroup.max - 1) {
@@ -82,34 +85,44 @@ const SimulationResult = ({ dataGroups }) => {
     setSimulationResult([]);
 
     SleepForASecond().then(() => {
-      if (dataGroups.length == 0) {
-        alert("No data to simulate!");
-        return;
-      }
+      let simulationGroups = Array<SimulationGroup>();
 
-      let simulationGroups = Array<{ current: number; max: number }>();
       dataGroups.forEach((dataGroup) => {
-        simulationGroups.push({
-          current: 0,
-          max: dataGroup.dataGroup.length,
-        });
+        if (dataGroup.ttype !== TARGETS) {
+          console.log(dataGroup);
+          simulationGroups.push({
+            current: 0,
+            max: dataGroup.dataGroup.length,
+          });
+        }
       });
 
       while (runSimulation) {
         let currentSimulationPath = "";
+        let simulationsToRun = Array<Simulation>();
+
         simulationGroups.forEach((sg, index) => {
+          // Simulation path
           currentSimulationPath += dataGroups[index].dataGroup[sg.current].name;
           if (index != simulationGroups.length - 1)
             currentSimulationPath += " - ";
+
+          // Simulation to run
+          if (dataGroups[index].ttype !== TARGETS) {
+            const newSimulation = new Simulation();
+            newSimulation.name = dataGroups[index].dataGroup[sg.current].name;
+            newSimulation.ttype = dataGroups[index].ttype;
+            newSimulation.value = dataGroups[index].dataGroup[sg.current].value;
+            simulationsToRun.push(newSimulation);
+          }
         });
 
         let counter = 0;
-        const currentResult = (
-          <SimulationResultRow
-            simulationPath={currentSimulationPath}
-            counter={counter}
-          />
-        );
+        const currentResult = createElement(SimulationResultRow, {
+          simulationPath: currentSimulationPath,
+          simulations: simulationsToRun,
+          targets: [],
+        });
 
         setSimulationResult((currSimResult) => {
           const copy = [...currSimResult];

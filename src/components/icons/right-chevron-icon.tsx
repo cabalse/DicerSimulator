@@ -1,11 +1,11 @@
 import React from "react";
 
-type props = {
+type Props = {
   onClick?: () => void;
   enabled?: boolean;
 };
 
-const RightChevronIcon = ({ onClick, enabled = true }: props) => {
+const RightChevronIcon = ({ onClick, enabled = true }: Props) => {
   const stroke = enabled ? "#000000" : "#999999";
 
   const handleClick = () => {

@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "./button";
+import Button from "./atoms/button";
 
-type props = {
+type Props = {
   addNewDataGroups: () => void;
   handleOpenFileSelectDialog: () => void;
   saveDataGroupToFile: () => void;
@@ -11,7 +11,7 @@ const MainControls = ({
   addNewDataGroups,
   handleOpenFileSelectDialog,
   saveDataGroupToFile,
-}: props) => (
+}: Props) => (
   <>
     <Button
       text="Add DataGroup"

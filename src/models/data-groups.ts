@@ -4,7 +4,7 @@ type DataGroups = {
   id: number;
   name: string;
   desc: string;
-  type: string;
+  ttype: string;
   dataGroup: DataGroup[];
 };
 

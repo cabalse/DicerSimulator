@@ -3,16 +3,17 @@ import GroupInput from "./group-input";
 import DataGroup from "../models/data-group";
 import EditIcon from "./icons/edit-icon";
 import Modal from "./modal";
-import InputField from "./input-field";
+import InputField from "./atoms/input-field";
 import AddIcon from "./icons/add-icon";
 import LeftChevronIcon from "./icons/left-chevron-icon";
 import RightChevronIcon from "./icons/right-chevron-icon";
+import { DICE, MODIFIERS, TARGETS } from "../consts/ttypes";
 
-type props = {
+type Props = {
   groupId: number;
   title: string;
   desc: string;
-  type: string;
+  ttype: string;
   data: DataGroup[];
   updateValue: (
     groupId: number,
@@ -26,7 +27,7 @@ type props = {
     groupId: number,
     title: string,
     desc: string,
-    type: string
+    ttype: string
   ) => void;
   position: (groupId: number) => "first" | "last" | "middle";
   moveGroup: (groupId: number, direction: "up" | "down") => void;
@@ -37,7 +38,7 @@ const Group = ({
   groupId,
   title,
   desc,
-  type,
+  ttype,
   data,
   updateValue,
   addNewValue,
@@ -46,17 +47,17 @@ const Group = ({
   position,
   moveGroup,
   removeGroup,
-}: props) => {
+}: Props) => {
   const [displayMetaEditModal, setDisplayMetaEditModal] = useState(false);
 
   const updateSingleValue = (id: number, name: string, value: number) =>
     updateValue(groupId, id, name, value);
 
   const onChangeTitle = (value: string) =>
-    updateMetaValues(groupId, value, desc, type);
+    updateMetaValues(groupId, value, desc, ttype);
 
   const onChangeDesc = (value: string) =>
-    updateMetaValues(groupId, title, value, type);
+    updateMetaValues(groupId, title, value, ttype);
 
   const onChangeType = (e: React.ChangeEvent<HTMLSelectElement>) =>
     updateMetaValues(groupId, title, desc, e.target.value);
@@ -89,9 +90,9 @@ const Group = ({
         />
       </div>
       <select className="border mt-2" onChange={onChangeType}>
-        <option selected={type === "Dice"}>Dice</option>
-        <option selected={type === "Modifiers"}>Modifiers</option>
-        <option selected={type === "Targets"}>Targets</option>
+        <option selected={ttype === DICE}>Dice</option>
+        <option selected={ttype === MODIFIERS}>Modifiers</option>
+        <option selected={ttype === TARGETS}>Targets</option>
       </select>
       <button className="text-left text-red-500 mt-2" onClick={onRemoveGroup}>
         Remove Group
@@ -111,7 +112,7 @@ const Group = ({
             <div className="mb-2">{desc}</div>
             <div>
               <span className="mr-2">Type:</span>
-              <span>{type}</span>
+              <span>{ttype}</span>
             </div>
           </div>
           <div

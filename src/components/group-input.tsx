@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import InputField from "./input-field";
+import InputField from "./atoms/input-field";
 import RemoveIcon from "./icons/remove-icon";
 
-type props = {
+type Props = {
   groupId: number;
   id: number;
   name: string;
@@ -18,7 +18,7 @@ const GroupInput = ({
   value,
   updateValue,
   remove,
-}: props) => {
+}: Props) => {
   const [nameVal, setNameVal] = useState<string>(name);
   const [valueVal, setValueVal] = useState<number>(value);
 

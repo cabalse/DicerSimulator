@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
 
-type props = {
+type Props = {
   children: ReactNode;
 };
 
-const CenterOnScreen = ({ children }: props) => (
+const CenterOnScreen = ({ children }: Props) => (
   <div className="h-screen flex items-center justify-center">{children}</div>
 );
 

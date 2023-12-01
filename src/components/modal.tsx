@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
-import CenterOnScreen from "./center-on-screen";
+import CenterOnScreen from "./atoms/center-on-screen";
 
-type props = {
+type Props = {
   children: ReactNode;
   display: boolean;
 };
 
-const Modal = ({ children, display }: props) => {
+const Modal = ({ children, display }: Props) => {
   return (
     <>
       {display ? (

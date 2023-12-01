@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Simulation from "../models/simulation";
+import Target from "../models/result-target";
 
-type props = {
+type Props = {
   simulationPath: string;
-  counter: number;
+  simulations: Array<Simulation>;
+  targets: Array<Target>;
 };
 
-const SimulationResultRow = ({ simulationPath, counter }: props) => {
+const SimulationResultRow = ({
+  simulationPath,
+  simulations,
+  targets,
+}: Props) => {
+  const [_counter, setCounter] = useState(0);
+
+  interface ICounter {
+    counter: number;
+  }
+
+  // useEffect(() => {
+  //   console.log(simulations);
+  //   console.log(targets);
+  // }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((counter) => counter + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-row mt-2">
       <div className="">{simulationPath}</div>
-      <div className="ml-2">{counter}</div>
+      <div className="ml-2">{_counter}</div>
     </div>
   );
 };

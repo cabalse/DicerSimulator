@@ -1,13 +1,13 @@
 import React, { ReactNode } from "react";
 
-type props = {
+type Props = {
   title: string;
   menu: ReactNode;
   inputControls: ReactNode;
   result: ReactNode;
 };
 
-const Layout = ({ title, menu, inputControls, result }: props) => (
+const Layout = ({ title, menu, inputControls, result }: Props) => (
   <>
     <div className="flex flex-row pt-4 pl-12">
       <div className="flex flex-col">
