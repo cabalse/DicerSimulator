@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import CenterOnScreen from "./atoms/center-on-screen";
+import CenterOnScreen from "../atoms/center-on-screen";
 
 type Props = {
   children: ReactNode;

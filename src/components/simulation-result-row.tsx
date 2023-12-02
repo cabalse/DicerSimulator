@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Simulation from "../models/simulation";
+import Simulation from "../models/data-simulation";
 import Target from "../models/result-target";
 
 type Props = {

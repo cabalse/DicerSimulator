@@ -5,8 +5,8 @@ import DataGroups from "../models/data-groups";
 import InputField from "./atoms/input-field";
 import Button from "./atoms/button";
 import SimulationResultRow from "./simulation-result-row";
-import Simulation from "../models/simulation";
-import { TARGETS } from "../consts/ttypes";
+import Simulation from "../models/data-simulation";
+import { TARGETS } from "../constants/ttypes";
 import ResultTarget from "../models/result-target";
 import SimulationGroup from "../models/simulation-group";
 
@@ -34,9 +34,9 @@ const SimulationResult = ({ dataGroups }) => {
     dataGroups.forEach(function (part, index, arr) {
       if (part.ttype !== TARGETS) {
         result += part.name != "" ? part.name : "NaN";
-        result += " [" + part.dataGroup.length + "]";
+        result += " [" + part.dataValues.length + "]";
         if (index !== arr.length - 1) result += " -> ";
-        numberOfCombinations *= part.dataGroup.length;
+        numberOfCombinations *= part.dataValues.length;
       }
     });
 
@@ -89,7 +89,6 @@ const SimulationResult = ({ dataGroups }) => {
 
       dataGroups.forEach((dataGroup) => {
         if (dataGroup.ttype !== TARGETS) {
-          console.log(dataGroup);
           simulationGroups.push({
             current: 0,
             max: dataGroup.dataGroup.length,
@@ -110,9 +109,9 @@ const SimulationResult = ({ dataGroups }) => {
           // Simulation to run
           if (dataGroups[index].ttype !== TARGETS) {
             const newSimulation = new Simulation();
-            newSimulation.name = dataGroups[index].dataGroup[sg.current].name;
-            newSimulation.ttype = dataGroups[index].ttype;
-            newSimulation.value = dataGroups[index].dataGroup[sg.current].value;
+            // newSimulation. = dataGroups[index].dataGroup[sg.current].name;
+            // newSimulation.ttype = dataGroups[index].ttype;
+            // newSimulation.value = dataGroups[index].dataGroup[sg.current].value;
             simulationsToRun.push(newSimulation);
           }
         });

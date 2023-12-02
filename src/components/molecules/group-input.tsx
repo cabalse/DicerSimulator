@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import InputField from "./atoms/input-field";
-import RemoveIcon from "./icons/remove-icon";
+import InputField from "../atoms/input-field";
+import RemoveIcon from "../atoms/icons/remove-icon";
 
 type Props = {
   groupId: number;
@@ -38,12 +38,14 @@ const GroupInput = ({
     <div className="flex flex-row min-w-[500px]">
       <InputField
         id={groupId + "name" + id}
+        title=""
         value={nameVal}
         onChange={onNameChange}
         className="w-[250px]"
       />
       <InputField
         id={groupId + "value" + id}
+        title=""
         value={valueVal}
         onChange={onValueChange}
         className="w-[30px]"

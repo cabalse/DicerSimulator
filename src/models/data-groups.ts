@@ -1,11 +1,11 @@
-import DataGroup from "./data-group";
+import DataValue from "./data-value";
 
 type DataGroups = {
   id: number;
   name: string;
   desc: string;
   ttype: string;
-  dataGroup: DataGroup[];
+  dataValues: DataValue[];
 };
 
 export default DataGroups;
