@@ -30,7 +30,7 @@ const LoadDataGroups = () => {
         }
       };
       reader.onerror = function () {
-        // console.log(reader.error);
+        console.log(reader.error);
       };
       reader.readAsText(file);
     }

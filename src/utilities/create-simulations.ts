@@ -84,7 +84,6 @@ const createSimulations = (
   dataGroups: Array<DataGroups>
 ): Array<DataSimulation> => {
   const ret: Array<DataSimulation> = [];
-  let counter = 30;
 
   if (dataGroups.length === 0) return ret;
 
@@ -101,7 +100,7 @@ const createSimulations = (
 
     simulationGroups.forEach((simulationGroup, index) => {
       simulationPath +=
-        operationGroups[index].dataValues[simulationGroup.current].name + " ";
+        operationGroups[index].dataValues[simulationGroup.current].name + " - ";
       operations.push({
         type: operationGroups[index].ttype,
         value: operationGroups[index].dataValues[simulationGroup.current].value,

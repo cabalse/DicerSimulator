@@ -19,11 +19,6 @@ const SimulationResultRow = ({
     counter: number;
   }
 
-  // useEffect(() => {
-  //   console.log(simulations);
-  //   console.log(targets);
-  // }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCounter((counter) => counter + 1);
