@@ -1,6 +1,6 @@
 type Target = {
-  value: number;
-  result: number;
+  value: string;
+  result: string;
 };
 
 export default Target;

@@ -14,7 +14,7 @@ const AddNewDataGroup = () => {
       name: "",
       desc: "",
       ttype: DICE,
-      dataValues: [{ id: 0, name: "", value: 0 }],
+      dataValues: [{ id: 0, name: "", value: "0" }],
     });
     appContext.setDataGroups(newDataGroups);
   };

@@ -1,7 +1,7 @@
 type DataValue = {
   id: number;
   name: string;
-  value: number;
+  value: string;
 };
 
 export default DataValue;

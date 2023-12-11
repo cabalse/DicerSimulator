@@ -20,7 +20,7 @@ const MainPage = ({ title }: Props) => {
       if (part.id === groupId) {
         const newData = [
           ...part.dataValues,
-          { id: part.dataValues.length + 1, name: "", value: 0 },
+          { id: part.dataValues.length + 1, name: "", value: "0" },
         ];
         part.dataValues = newData;
       }
@@ -32,7 +32,7 @@ const MainPage = ({ title }: Props) => {
     groupId: number,
     id: number,
     name: string,
-    value: number
+    value: string
   ) => {
     const newDataGroups = [...appContext.dataGroups];
     newDataGroups.forEach(function (part, index, arr) {

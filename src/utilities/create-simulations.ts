@@ -71,7 +71,7 @@ const createTargets = (targetGroups: Array<DataGroups>) => {
   targetGroups.forEach((targetGroup) => {
     targetGroup.dataValues.forEach((dataValue) => {
       ret.push({
-        value: parseInt(dataValue.name),
+        value: dataValue.name,
         result: dataValue.value,
       });
     });

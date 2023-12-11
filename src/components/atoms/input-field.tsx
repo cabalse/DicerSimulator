@@ -3,7 +3,7 @@ import React from "react";
 type Props = {
   id: string;
   title: string;
-  value: string | number;
+  value: string;
   onChange: (value: string) => void;
   className?: string;
 };

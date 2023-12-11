@@ -19,7 +19,7 @@ type Props = {
     groupId: number,
     id: number,
     name: string,
-    value: number
+    value: string
   ) => void;
   addNewValue: () => void;
   removeValue: (groupId: number, id: number) => void;
@@ -50,7 +50,7 @@ const DataGroupInput = ({
 }: Props) => {
   const [displayMetaEditModal, setDisplayMetaEditModal] = useState(false);
 
-  const updateSingleValue = (id: number, name: string, value: number) =>
+  const updateSingleValue = (id: number, name: string, value: string) =>
     updateValue(groupId, id, name, value);
 
   const onChangeTitle = (value: string) =>

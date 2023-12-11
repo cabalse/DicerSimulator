@@ -1,6 +1,6 @@
 type Operation = {
   type: string;
-  value: number;
+  value: string;
 };
 
 export default Operation;

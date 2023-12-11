@@ -6,8 +6,8 @@ type Props = {
   groupId: number;
   id: number;
   name: string;
-  value: number;
-  updateValue: (id: number, name: string, value: number) => void;
+  value: string;
+  updateValue: (id: number, name: string, value: string) => void;
   remove: (groupId: number, id: number) => void;
 };
 
@@ -20,7 +20,7 @@ const GroupInput = ({
   remove,
 }: Props) => {
   const [nameVal, setNameVal] = useState<string>(name);
-  const [valueVal, setValueVal] = useState<number>(value);
+  const [valueVal, setValueVal] = useState<string>(value);
 
   useEffect(() => {
     setNameVal(name);
@@ -32,7 +32,7 @@ const GroupInput = ({
   }, [nameVal, valueVal]);
 
   const onNameChange = (value: string) => setNameVal(value);
-  const onValueChange = (value: string) => setValueVal(parseInt(value));
+  const onValueChange = (value: string) => setValueVal(value);
 
   return (
     <div className="flex flex-row min-w-[500px]">
@@ -48,7 +48,7 @@ const GroupInput = ({
         title=""
         value={valueVal}
         onChange={onValueChange}
-        className="w-[30px]"
+        className="w-[45px]"
       />
       <div className="pt-1" onClick={() => remove(groupId, id)}>
         <RemoveIcon />

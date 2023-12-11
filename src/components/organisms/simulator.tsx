@@ -3,12 +3,12 @@ import _ from "lodash";
 
 import DataSimulation from "../../models/data-simulation";
 import DataSimulationResult from "../../models/data-simulation-result";
-import { DICE } from "../../constants/ttypes";
+import { DICE, MODIFIERS } from "../../constants/ttypes";
 import DiceScore from "../../models/dice_score";
 import Target from "../../models/target";
 import Operation from "../../models/operation";
 
-const nrOfSimulations = 10000;
+const nrOfSimulations = 1000;
 
 const throwDie = (sides: number) => {
   return Math.floor(Math.random() * sides) + 1;
@@ -59,11 +59,16 @@ const addDiceResult = (score: number, diceScores: Array<DiceScore>) => {
 
 const getTarget = (result: number, targets: Array<Target>) => {
   let ret = 0;
+
   targets.forEach((target) => {
-    if (target.value === result) {
-      ret = target.result;
+    let targetValue = parseInt(target.value);
+    let targetResult = parseInt(target.result);
+
+    if (targetValue && targetValue === result) {
+      ret = targetResult ?? 0;
     }
   });
+
   return ret;
 };
 
@@ -89,7 +94,8 @@ const getNumberOfDice = (operations: Array<Operation>): number => {
   let nrOfDice = 0;
   operations.forEach((operation) => {
     if (operation.type === DICE) {
-      nrOfDice += operation.value;
+      let value = parseInt(operation.value);
+      nrOfDice += value;
     }
   });
 
@@ -119,10 +125,13 @@ const Simulator = ({ simulator }: Props) => {
 
       simulator.operations.forEach((operation) => {
         if (operation.type === DICE) {
-          for (let i = 0; i < operation.value; i++) {
+          let value = parseInt(operation.value);
+          for (let i = 0; i < value; i++) {
             const dieResult = throwDie(6);
             result.push(dieResult);
           }
+        } else if (operation.type === MODIFIERS) {
+          console.log("Mod: ", operation.value);
         }
       });
 
