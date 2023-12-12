@@ -8,7 +8,7 @@ import DiceScore from "../../models/dice_score";
 import Target from "../../models/target";
 import Operation from "../../models/operation";
 
-const nrOfSimulations = 1000;
+const nrOfSimulations = 1;
 
 const throwDie = (sides: number) => {
   return Math.floor(Math.random() * sides) + 1;
@@ -106,6 +106,15 @@ const getRandomNumber = () => {
   return Math.floor(Math.random() * 10000) + 1;
 };
 
+const addModifiers = (result: Array<number>, mods: Array<string>, targets: Array<Target>) => {
+  const numberOfResults = result.length;
+  const numberOfMods = mods.length;
+
+  
+
+  return result;
+};
+
 type Props = {
   simulator: DataSimulation;
 };
@@ -122,6 +131,7 @@ const Simulator = ({ simulator }: Props) => {
 
     for (let i = 0; i < nrOfSimulations; i++) {
       let result = Array<number>();
+      let mods = Array<string>();
 
       simulator.operations.forEach((operation) => {
         if (operation.type === DICE) {
@@ -131,9 +141,11 @@ const Simulator = ({ simulator }: Props) => {
             result.push(dieResult);
           }
         } else if (operation.type === MODIFIERS) {
-          console.log("Mod: ", operation.value);
+          mods.push(operation.value);
         }
       });
+
+      result = addModifiers(result, mods, simulator.targets);
 
       let hits = 0;
       result.forEach((item) => {
