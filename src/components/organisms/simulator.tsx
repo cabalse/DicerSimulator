@@ -7,8 +7,9 @@ import { DICE, MODIFIERS } from "../../constants/ttypes";
 import DiceScore from "../../models/dice_score";
 import Target from "../../models/target";
 import Operation from "../../models/operation";
+import { addModifiers } from "../../utilities/modifiers";
 
-const nrOfSimulations = 1;
+const nrOfSimulations = 100000;
 
 const throwDie = (sides: number) => {
   return Math.floor(Math.random() * sides) + 1;
@@ -104,15 +105,6 @@ const getNumberOfDice = (operations: Array<Operation>): number => {
 
 const getRandomNumber = () => {
   return Math.floor(Math.random() * 10000) + 1;
-};
-
-const addModifiers = (result: Array<number>, mods: Array<string>, targets: Array<Target>) => {
-  const numberOfResults = result.length;
-  const numberOfMods = mods.length;
-
-  
-
-  return result;
 };
 
 type Props = {
